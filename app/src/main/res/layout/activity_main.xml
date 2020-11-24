@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".OneDayActivity">
 
-    <com.example.calendarexample.weekview.WeekView
+    <com.example.calendarexample.weekviewkotlin.WeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

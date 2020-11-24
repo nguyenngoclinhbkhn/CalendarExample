@@ -3,8 +3,8 @@ package com.example.calendarexample
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.calendarexample.weekview.MonthLoader
-import com.example.calendarexample.weekview.WeekViewEvent
+import com.example.calendarexample.weekviewkotlin.MonthLoader
+import com.example.calendarexample.weekviewkotlin.WeekViewEvent
 import kotlinx.android.synthetic.main.activity_seven_day.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -14,8 +14,8 @@ class SevenDayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seven_day)
 
-        weekViewSeven.monthChangeListener =
-            MonthLoader.MonthChangeListener { newYear, newMonth ->
+        weekViewSeven.setMonthChangeListener(object: MonthLoader.MonthChangeListener{
+            override fun onMonthChange(newYear: Int, newMonth: Int): List<WeekViewEvent>? {
                 val events: MutableList<WeekViewEvent> = ArrayList()
 
                 var startTime: Calendar = Calendar.getInstance()
@@ -139,7 +139,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.set(Calendar.HOUR_OF_DAY, 11)
                 endTime.set(Calendar.MINUTE, 0)
                 event = WeekViewEvent(8, "Test event", null, startTime, endTime, true)
-                event.color = Color.RED
+                event.setColor(Color.RED)
                 events.add(event)
 
                 // All day event until 00:00 next day
@@ -158,8 +158,10 @@ class SevenDayActivity : AppCompatActivity() {
                 event = WeekViewEvent(8, "getEventTitle(startTime)", null, startTime, endTime, true)
                 event.setColor(resources.getColor(R.color.event_color_01))
                 events.add(event)
-                events
+                return events
             }
+
+        })
     }
 
     override fun onBackPressed() {
