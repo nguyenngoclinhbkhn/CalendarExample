@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".OneDayActivity">
+    tools:context=".SevenDayActivity">
 
     <com.example.calendarexample.weekview.WeekView
-        android:id="@+id/weekView"
+        android:id="@+id/weekViewSeven"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:eventTextColor="@android:color/white"
@@ -18,7 +17,7 @@
         app:headerColumnTextColor="@color/colorAccent"
         app:headerRowPadding="12dp"
         app:columnGap="8dp"
-        app:noOfVisibleDays="1"
+        app:noOfVisibleDays="7"
         app:headerRowBackgroundColor="@color/colorPrimaryDark"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"

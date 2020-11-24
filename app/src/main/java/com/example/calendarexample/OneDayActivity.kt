@@ -1,5 +1,6 @@
 package com.example.calendarexample
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calendarexample.weekview.MonthLoader
@@ -9,7 +10,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity(), MonthLoader.MonthChangeListener {
+class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,16 +135,14 @@ class MainActivity : AppCompatActivity(), MonthLoader.MonthChangeListener {
         events.add(event)
 
         startTime = Calendar.getInstance()
-        startTime.set(Calendar.DAY_OF_MONTH, 8)
-        startTime.set(Calendar.HOUR_OF_DAY, 2)
-        startTime.set(Calendar.MINUTE, 0)
+        startTime.set(Calendar.HOUR_OF_DAY, 8)
+        startTime.set(Calendar.MINUTE, 30)
         startTime.set(Calendar.MONTH, newMonth - 1)
-        startTime.set(Calendar.YEAR, newYear)
         endTime = startTime.clone() as Calendar
-        endTime.set(Calendar.DAY_OF_MONTH, 10)
         endTime.set(Calendar.HOUR_OF_DAY, 11)
-        event = WeekViewEvent(8, "getEventTitle(startTime)", null, startTime, endTime, true)
-        event.setColor(resources.getColor(R.color.event_color_03))
+        endTime.set(Calendar.MINUTE, 0)
+        event = WeekViewEvent(8, "Test event", null, startTime, endTime, true)
+        event.color = Color.RED
         events.add(event)
 
         // All day event until 00:00 next day
@@ -163,5 +162,9 @@ class MainActivity : AppCompatActivity(), MonthLoader.MonthChangeListener {
         event.setColor(resources.getColor(R.color.event_color_01))
         events.add(event)
         return events
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
