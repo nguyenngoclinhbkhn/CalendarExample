@@ -238,16 +238,20 @@ class WeekView : View {
             // If the tap was on an event then trigger the callback.
             if (mEventRects != null && mEventClickListener != null) {
                 val reversedEventRects = mEventRects
-                reversedEventRects?.reverse()
-                if (reversedEventRects != null) {
-                    for (event: EventRect? in reversedEventRects) {
-                        if (event?.rectF != null && e.x > event.rectF?.left && e.x < event.rectF?.right && e.y > event.rectF?.top && e.y < event.rectF?.bottom) {
-                            mEventClickListener?.onEventClick(event.originalEvent, event.rectF)
-                            playSoundEffect(SoundEffectConstants.CLICK)
-                            return super.onSingleTapConfirmed(e)
+                reversedEventRects?.let { reverseEvent ->
+                    reverseEvent.reverse()
+                    for (event in reverseEvent) {
+                        event?.let { it ->
+                            if (it.rectF != null && e.x > (it.rectF?.left ?: 0F) && e.x < (it.rectF?.right ?: 0F) &&
+                                e.y > (it.rectF?.top ?: 0F) && e.y < (it.rectF?.bottom ?: 0F)) {
+                                mEventClickListener?.onEventClick(it.originalEvent, it.rectF)
+                                playSoundEffect(SoundEffectConstants.CLICK)
+                                return super.onSingleTapConfirmed(e)
+                            }
                         }
                     }
                 }
+
             }
 
             // If the tap was on in an empty space, then trigger the callback.
@@ -268,7 +272,8 @@ class WeekView : View {
                 reversedEventRects?.reverse()
                 if (reversedEventRects != null) {
                     for (event: EventRect? in reversedEventRects) {
-                        if (event?.rectF != null && e.x > event.rectF?.left && e.x < event.rectF?.right && e.y > event.rectF?.top && e.y < event.rectF?.bottom) {
+                        if (event?.rectF != null && e.x > (event.rectF?.left ?: 0F) && e.x < (event.rectF?.right ?: 0F) &&
+                            e.y > (event.rectF?.top ?: 0F) && e.y < (event.rectF?.bottom ?: 0F)) {
                             mEventLongPressListener?.onEventLongPress(
                                 event.originalEvent,
                                 event.rectF
@@ -292,12 +297,16 @@ class WeekView : View {
     }
 
     constructor(context: Context?) : super(context) {
+        mContext = context
+        init()
     }
 
     constructor(
         context: Context?,
         attrs: AttributeSet?
     ) : super(context, attrs) {
+        mContext = context
+        init()
     }
 
     constructor(
@@ -693,11 +702,7 @@ class WeekView : View {
             if ((mEventRects == null || mRefreshEvents ||
                         (dayNumber == leftDaysWithGaps + 1 && mFetchedPeriod != mWeekViewLoader?.toWeekViewPeriodIndex(
                             day
-                        ).toInt() && Math.abs(
-                            mFetchedPeriod - mWeekViewLoader?.toWeekViewPeriodIndex(
-                                day
-                            )
-                        ) > 0.5))
+                        )?.toInt() && Math.abs(mFetchedPeriod - (mWeekViewLoader?.toWeekViewPeriodIndex(day) ?: 0.0)) > 0.5))
             ) {
                 getMoreEvents(day)
                 mRefreshEvents = false
@@ -954,13 +959,15 @@ class WeekView : View {
                                 }
                             }
                             eventRect[i]?.event?.let { rect ->
-                                drawEventTitle(
-                                    rect,
-                                    eventRect[i]?.rectF,
-                                    canvas,
-                                    top,
-                                    left
-                                )
+                                eventRect[i]?.rectF?.let {
+                                    drawEventTitle(
+                                        rect,
+                                        it,
+                                        canvas,
+                                        top,
+                                        left
+                                    )
+                                }
                             }
                         } else eventRect[i]?.rectF = null
                     }
@@ -982,12 +989,12 @@ class WeekView : View {
      */
     private fun drawEventTitle(
         event: WeekViewEvent,
-        rect: RectF?,
+        rect: RectF,
         canvas: Canvas,
         originalTop: Float,
         originalLeft: Float
     ) {
-        if (rect?.right - rect.left - (mEventPadding * 2) < 0) return
+        if (rect.right - rect.left - (mEventPadding * 2) < 0) return
         if (rect.bottom - rect.top - (mEventPadding * 2) < 0) return
 
         // Prepare the name of the event.
@@ -1280,7 +1287,7 @@ class WeekView : View {
      */
     private fun computePositionOfEvents(eventRects: List<EventRect?>) {
         // Make "collision groups" for all events that collide with others.
-        val collisionGroups: MutableList<MutableList<EventRect?>> =
+        val collisionGroups: ArrayList<ArrayList<EventRect?>> =
             ArrayList()
         for (eventRect: EventRect? in eventRects) {
             var isPlaced = false
@@ -1294,13 +1301,13 @@ class WeekView : View {
                 }
             }
             if (!isPlaced) {
-                val newGroup: MutableList<EventRect?> =
+                val newGroup: ArrayList<EventRect?> =
                     ArrayList()
                 newGroup.add(eventRect)
                 collisionGroups.add(newGroup)
             }
         }
-        for (collisionGroup: List<EventRect?> in collisionGroups) {
+        for (collisionGroup: ArrayList<EventRect?> in collisionGroups) {
             expandEventsToMaxWidth(collisionGroup)
         }
     }
@@ -1317,7 +1324,7 @@ class WeekView : View {
         columns.add(ArrayList())
         for (eventRect: EventRect? in collisionGroup) {
             var isPlaced = false
-            for (column: MutableList<EventRect?> in columns) {
+            for (column in columns) {
                 if (column.size == 0) {
                     column.add(eventRect)
                     isPlaced = true
@@ -1345,15 +1352,17 @@ class WeekView : View {
         for (i in 0 until maxRowCount) {
             // Set the left and right values of the event.
             var j = 0f
-            for (column: List<EventRect?> in columns) {
+            for (column in columns) {
                 if (column.size >= i + 1) {
                     val eventRect = column[i]
                     eventRect?.width = 1f / columns.size
-                    eventRect.left = j / columns.size
-                    eventRect.top =
-                        eventRect.event.getStartTime()[Calendar.HOUR_OF_DAY] * 60 + eventRect.event.getStartTime()[Calendar.MINUTE].toFloat()
-                    eventRect.bottom =
-                        eventRect.event.getEndTime()[Calendar.HOUR_OF_DAY] * 60 + eventRect.event.getEndTime()[Calendar.MINUTE].toFloat()
+                    eventRect?.left = j / columns.size
+                    eventRect?.top =
+                        (eventRect?.event?.getStartTime()?.get(Calendar.HOUR_OF_DAY) ?: WeekViewUtils.todayHour()) * 60 +
+                                (eventRect?.event?.getStartTime()?.get(Calendar.MINUTE)?.toFloat() ?: WeekViewUtils.todayMinutes().toFloat())
+                    eventRect?.bottom =
+                        (eventRect?.event?.getEndTime()?.get(Calendar.HOUR_OF_DAY) ?: WeekViewUtils.todayHour()) * 60 +
+                                (eventRect?.event?.getEndTime()?.get(Calendar.MINUTE)?.toFloat() ?: WeekViewUtils.todayMinutes().toFloat())
                     mEventRects?.add(eventRect)
                 }
                 j++
@@ -1369,9 +1378,10 @@ class WeekView : View {
      * @return true if the events overlap.
      */
     private fun isEventsCollide(
-        event1: WeekViewEvent,
-        event2: WeekViewEvent
+        event1: WeekViewEvent?,
+        event2: WeekViewEvent?
     ): Boolean {
+        if (event1 == null || event2 == null) return false
         val start1 = event1.getStartTime().timeInMillis
         val end1 = event1.getEndTime().timeInMillis
         val start2 = event2.getStartTime().timeInMillis
@@ -1977,7 +1987,7 @@ class WeekView : View {
     /////////////////////////////////////////////////////////////////
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mScaleDetector?.onTouchEvent(event)
-        val `val` = mGestureDetector?.onTouchEvent(event)
+        val a = mGestureDetector?.onTouchEvent(event)
 
         // Check after call of mGestureDetector, so mCurrentFlingDirection and mCurrentScrollDirection are set.
         if ((event.action == MotionEvent.ACTION_UP) && !mIsZooming && (mCurrentFlingDirection == Direction.NONE)) {
@@ -1986,7 +1996,7 @@ class WeekView : View {
             }
             mCurrentScrollDirection = Direction.NONE
         }
-        return `val`
+        return a ?: false
     }
 
     private fun goToNearestOrigin() {
@@ -2034,9 +2044,9 @@ class WeekView : View {
         } else {
             if (mCurrentFlingDirection != Direction.NONE && forceFinishScroll()) {
                 goToNearestOrigin()
-            } else if (mScroller?.computeScrollOffset() == true) {
-                mCurrentOrigin.y = mScroller?.currY.toFloat()
-                mCurrentOrigin.x = mScroller?.currX.toFloat()
+            } else if (mScroller != null && mScroller?.computeScrollOffset() == true) {
+                mCurrentOrigin.y = mScroller!!.currY.toFloat()
+                mCurrentOrigin.x = mScroller!!.currX.toFloat()
                 ViewCompat.postInvalidateOnAnimation(this)
             }
         }
@@ -2049,7 +2059,9 @@ class WeekView : View {
     private fun forceFinishScroll(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             // current velocity only available since api 14
-            mScroller?.currVelocity <= mMinimumFlingVelocity
+            mScroller?.let {
+                it.currVelocity <= mMinimumFlingVelocity
+            } ?: false
         } else {
             false
         }

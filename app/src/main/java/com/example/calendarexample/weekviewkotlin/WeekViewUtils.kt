@@ -41,4 +41,12 @@ object WeekViewUtils {
         return today
     }
 
+    fun todayHour(): Int{
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    }
+
+    fun todayMinutes(): Int{
+        return Calendar.getInstance().get(Calendar.MINUTE)
+    }
+
 }
