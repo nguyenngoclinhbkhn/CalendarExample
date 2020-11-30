@@ -1,27 +1,24 @@
 package com.example.calendarexample
 
 import android.graphics.Color
-import android.graphics.RectF
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.calendarexample.weekviewkotlin.MonthLoader
-import com.example.calendarexample.weekviewkotlin.WeekView
-import com.example.calendarexample.weekviewkotlin.WeekViewEvent
-import kotlinx.android.synthetic.main.activity_main.*
+import com.alamkanak.weekview.MonthLoader
+import com.alamkanak.weekview.WeekViewEvent
+import kotlinx.android.synthetic.main.activity_library.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
-    WeekView.EventClickListener {
-
+class LibraryActivity : AppCompatActivity(), MonthLoader.MonthChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        weekView.setMonthChangeListener(this)
+        setContentView(R.layout.activity_library)
 
-        weekView.setOnEventClickListener(this)
+        weekView.setMonthChangeListener(this)
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     override fun onMonthChange(newYear: Int, newMonth: Int): List<WeekViewEvent>? {
@@ -36,7 +33,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime.add(Calendar.HOUR, 1)
         endTime.set(Calendar.MONTH, newMonth - 1)
         var event = WeekViewEvent(1, "Hello", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_01))
+        event.setColor(resources.getColor(R.color.event_color_01))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -49,7 +46,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime.set(Calendar.MINUTE, 30)
         endTime.set(Calendar.MONTH, newMonth - 1)
         event = WeekViewEvent(10, "Hello 2", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_02))
+        event.setColor(resources.getColor(R.color.event_color_02))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -61,7 +58,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime.set(Calendar.HOUR_OF_DAY, 5)
         endTime.set(Calendar.MINUTE, 0)
         event = WeekViewEvent(10, "hehhe", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_03))
+        event.setColor(resources.getColor(R.color.event_color_03))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -73,7 +70,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime.add(Calendar.HOUR_OF_DAY, 2)
         endTime.set(Calendar.MONTH, newMonth - 1)
         event = WeekViewEvent(2, "hihi", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_02))
+        event.setColor(resources.getColor(R.color.event_color_02))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -86,7 +83,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime.add(Calendar.HOUR_OF_DAY, 3)
         endTime.set(Calendar.MONTH, newMonth - 1)
         event = WeekViewEvent(3, "getEventTitle(startTime)", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_03))
+        event.setColor(resources.getColor(R.color.event_color_03))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -98,7 +95,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime = startTime.clone() as Calendar
         endTime.add(Calendar.HOUR_OF_DAY, 3)
         event = WeekViewEvent(4, "getEventTitle(startTime)", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_04))
+        event.setColor(resources.getColor(R.color.event_color_04))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -110,7 +107,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime = startTime.clone() as Calendar
         endTime.add(Calendar.HOUR_OF_DAY, 3)
         event = WeekViewEvent(5, "getEventTitle(startTime)", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_01))
+        event.setColor(resources.getColor(R.color.event_color_01))
         events.add(event)
 
         startTime = Calendar.getInstance()
@@ -122,7 +119,7 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         endTime = startTime.clone() as Calendar
         endTime.add(Calendar.HOUR_OF_DAY, 3)
         event = WeekViewEvent(5, "getEventTitle(startTime)", startTime, endTime)
-        event.mColor = (resources.getColor(R.color.event_color_02))
+        event.setColor(resources.getColor(R.color.event_color_02))
         events.add(event)
 
         //AllDay event
@@ -140,16 +137,6 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
 //        events.add(event)
 //        events.add(event)
 
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 8)
-        startTime.set(Calendar.MINUTE, 10)
-        startTime.set(Calendar.MONTH, newMonth - 1)
-        endTime = startTime.clone() as Calendar
-        endTime.set(Calendar.HOUR_OF_DAY, 11)
-        endTime.set(Calendar.MINUTE, 0)
-        event = WeekViewEvent(8, "Test event", null, startTime, endTime, true)
-        event.mColor = (Color.RED)
-        events.add(event)
 
         // All day event until 00:00 next day
 
@@ -170,11 +157,4 @@ class OneDayActivity : AppCompatActivity(), MonthLoader.MonthChangeListener,
         return events
     }
 
-    override fun onBackPressed() {
-        finish()
-    }
-
-    override fun onEventClick(event: WeekViewEvent?, eventRect: RectF?) {
-        Toast.makeText(this, event?.mName, Toast.LENGTH_SHORT).show()
-    }
 }

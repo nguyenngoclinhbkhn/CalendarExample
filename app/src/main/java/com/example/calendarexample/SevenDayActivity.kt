@@ -27,7 +27,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.add(Calendar.HOUR, 1)
                 endTime.set(Calendar.MONTH, newMonth - 1)
                 var event = WeekViewEvent(1, "Hello", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_01))
+                event.mColor = (resources.getColor(R.color.event_color_01))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -40,7 +40,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.set(Calendar.MINUTE, 30)
                 endTime.set(Calendar.MONTH, newMonth - 1)
                 event = WeekViewEvent(10, "Hello 2", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_02))
+                event.mColor = (resources.getColor(R.color.event_color_02))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -52,7 +52,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.set(Calendar.HOUR_OF_DAY, 5)
                 endTime.set(Calendar.MINUTE, 0)
                 event = WeekViewEvent(10, "hehhe", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_03))
+                event.mColor = (resources.getColor(R.color.event_color_03))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -64,7 +64,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.add(Calendar.HOUR_OF_DAY, 2)
                 endTime.set(Calendar.MONTH, newMonth - 1)
                 event = WeekViewEvent(2, "hihi", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_02))
+                event.mColor = (resources.getColor(R.color.event_color_02))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -77,7 +77,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.add(Calendar.HOUR_OF_DAY, 3)
                 endTime.set(Calendar.MONTH, newMonth - 1)
                 event = WeekViewEvent(3, "getEventTitle(startTime)", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_03))
+                event.mColor = (resources.getColor(R.color.event_color_03))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -89,7 +89,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime = startTime.clone() as Calendar
                 endTime.add(Calendar.HOUR_OF_DAY, 3)
                 event = WeekViewEvent(4, "getEventTitle(startTime)", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_04))
+                event.mColor = (resources.getColor(R.color.event_color_04))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -101,7 +101,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime = startTime.clone() as Calendar
                 endTime.add(Calendar.HOUR_OF_DAY, 3)
                 event = WeekViewEvent(5, "getEventTitle(startTime)", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_01))
+                event.mColor = (resources.getColor(R.color.event_color_01))
                 events.add(event)
 
                 startTime = Calendar.getInstance()
@@ -113,7 +113,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime = startTime.clone() as Calendar
                 endTime.add(Calendar.HOUR_OF_DAY, 3)
                 event = WeekViewEvent(5, "getEventTitle(startTime)", startTime, endTime)
-                event.setColor(resources.getColor(R.color.event_color_02))
+                event.mColor = (resources.getColor(R.color.event_color_02))
                 events.add(event)
 
                 //AllDay event
@@ -127,7 +127,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime = startTime.clone() as Calendar
                 endTime.add(Calendar.HOUR_OF_DAY, 23)
                 event = WeekViewEvent(7, "getEventTitle(startTime)", null, startTime, endTime, true)
-                event.setColor(resources.getColor(R.color.event_color_04))
+                event.mColor = (resources.getColor(R.color.event_color_04))
                 events.add(event)
                 events.add(event)
 
@@ -139,7 +139,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime.set(Calendar.HOUR_OF_DAY, 11)
                 endTime.set(Calendar.MINUTE, 0)
                 event = WeekViewEvent(8, "Test event", null, startTime, endTime, true)
-                event.setColor(Color.RED)
+                event.mColor = (Color.RED)
                 events.add(event)
 
                 // All day event until 00:00 next day
@@ -156,7 +156,7 @@ class SevenDayActivity : AppCompatActivity() {
                 endTime = startTime.clone() as Calendar
                 endTime.set(Calendar.DAY_OF_MONTH, 11)
                 event = WeekViewEvent(8, "getEventTitle(startTime)", null, startTime, endTime, true)
-                event.setColor(resources.getColor(R.color.event_color_01))
+                event.mColor = (resources.getColor(R.color.event_color_01))
                 events.add(event)
                 return events
             }

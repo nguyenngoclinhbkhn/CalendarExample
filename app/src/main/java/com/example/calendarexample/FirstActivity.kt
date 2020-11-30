@@ -18,4 +18,8 @@ class FirstActivity : AppCompatActivity() {
             startActivity(Intent(this, SevenDayActivity::class.java))
         }
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }

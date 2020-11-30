@@ -15,13 +15,14 @@
         app:textSize="12sp"
         app:hourHeight="60dp"
         app:headerColumnPadding="8dp"
-        app:headerColumnTextColor="@color/colorAccent"
+        app:headerColumnTextColor="#18040D47"
+        app:showNowLine="true"
         app:headerRowPadding="12dp"
         app:columnGap="8dp"
         app:noOfVisibleDays="1"
-        app:headerRowBackgroundColor="@color/colorPrimaryDark"
+        app:headerRowBackgroundColor="@color/event_color_03"
         app:dayBackgroundColor="#05000000"
-        app:todayBackgroundColor="#1848adff"
+        app:todayBackgroundColor="#FFFFFF"
         app:headerColumnBackground="#ffffffff"
         app:todayHeaderTextColor="@android:color/white" />
 </LinearLayout>
