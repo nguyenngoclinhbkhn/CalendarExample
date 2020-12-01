@@ -11,7 +11,7 @@ class OptionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_option)
 
         btnCustomCalendar.setOnClickListener {
-            startActivity(Intent(this, FirstActivity::class.java))
+            startActivity(Intent(this, SevenDayActivity::class.java))
         }
 
 

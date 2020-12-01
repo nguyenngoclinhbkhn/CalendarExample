@@ -14,15 +14,16 @@
         app:eventTextColor="@android:color/white"
         app:textSize="12sp"
         app:hourHeight="60dp"
-        app:headerColumnPadding="8dp"
+        app:headerColumnPadding="10dp"
         app:headerColumnTextColor="#18040D47"
         app:showNowLine="true"
-        app:headerRowPadding="12dp"
-        app:columnGap="8dp"
+        app:headerRowPadding="0dp"
+        app:minHourHeight="50dp"
+        app:columnGap="0dp"
+        app:eventCornerRadius="5dp"
         app:noOfVisibleDays="1"
-        app:headerRowBackgroundColor="@color/event_color_03"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#FFFFFF"
         app:headerColumnBackground="#ffffffff"
-        app:todayHeaderTextColor="@android:color/white" />
+        app:todayHeaderTextColor="#ffffffff" />
 </LinearLayout>

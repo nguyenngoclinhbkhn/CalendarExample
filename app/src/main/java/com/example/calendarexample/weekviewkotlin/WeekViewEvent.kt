@@ -6,31 +6,13 @@ import java.util.*
  * COPYRIGHT ZYYX. ALL RIGHTS RESERVED,2020
  */
 class WeekViewEvent {
+    var eventStartTime: Calendar
+    var eventEndTime: Calendar
+    var eventName: String? = null
+    var eventLocation: String? = null
+    var eventId: Long = 0
+    var eventColor = 0
 
-    var mStartTime: Calendar
-    var mEndTime: Calendar
-    var mName: String? = null
-    var mLocation: String? = null
-
-    var mId: Long = 0
-    var mColor = 0
-
-
-    /**
-     * Initializes the event for week view.
-     * @param id The id of the event.
-     * @param name Name of the event.
-     * @param startYear Year when the event starts.
-     * @param startMonth Month when the event starts.
-     * @param startDay Day when the event starts.
-     * @param startHour Hour (in 24-hour format) when the event starts.
-     * @param startMinute Minute when the event starts.
-     * @param endYear Year when the event ends.
-     * @param endMonth Month when the event ends.
-     * @param endDay Day when the event ends.
-     * @param endHour Hour (in 24-hour format) when the event ends.
-     * @param endMinute Minute when the event ends.
-     */
     constructor(
         id: Long,
         name: String?,
@@ -45,20 +27,20 @@ class WeekViewEvent {
         endHour: Int,
         endMinute: Int
     ) {
-        this.mId = id
-        this.mStartTime = Calendar.getInstance()
-        this.mStartTime?.set(Calendar.YEAR, startYear)
-        this.mStartTime?.set(Calendar.MONTH, startMonth - 1)
-        this.mStartTime?.set(Calendar.DAY_OF_MONTH, startDay)
-        this.mStartTime?.set(Calendar.HOUR_OF_DAY, startHour)
-        this.mStartTime?.set(Calendar.MINUTE, startMinute)
-        this.mEndTime = Calendar.getInstance()
-        this.mEndTime?.set(Calendar.YEAR, endYear)
-        this.mEndTime?.set(Calendar.MONTH, endMonth - 1)
-        this.mEndTime?.set(Calendar.DAY_OF_MONTH, endDay)
-        this.mEndTime?.set(Calendar.HOUR_OF_DAY, endHour)
-        this.mEndTime?.set(Calendar.MINUTE, endMinute)
-        this.mName = name
+        this.eventId = id
+        this.eventStartTime = Calendar.getInstance()
+        this.eventStartTime.set(Calendar.YEAR, startYear)
+        this.eventStartTime.set(Calendar.MONTH, startMonth - 1)
+        this.eventStartTime.set(Calendar.DAY_OF_MONTH, startDay)
+        this.eventStartTime.set(Calendar.HOUR_OF_DAY, startHour)
+        this.eventStartTime.set(Calendar.MINUTE, startMinute)
+        this.eventEndTime = Calendar.getInstance()
+        this.eventEndTime.set(Calendar.YEAR, endYear)
+        this.eventEndTime.set(Calendar.MONTH, endMonth - 1)
+        this.eventEndTime.set(Calendar.DAY_OF_MONTH, endDay)
+        this.eventEndTime.set(Calendar.HOUR_OF_DAY, endHour)
+        this.eventEndTime.set(Calendar.MINUTE, endMinute)
+        this.eventName = name
     }
 
     /**
@@ -76,11 +58,11 @@ class WeekViewEvent {
         startTime: Calendar,
         endTime: Calendar
     ) {
-        this.mId = id
-        this.mName = name
-        this.mLocation = location
-        this.mStartTime = startTime
-        this.mEndTime = endTime
+        this.eventId = id
+        this.eventName = name
+        this.eventLocation = location
+        this.eventStartTime = startTime
+        this.eventEndTime = endTime
     }
 
     /**
@@ -96,14 +78,15 @@ class WeekViewEvent {
         startTime: Calendar,
         endTime: Calendar
     ) {
-        this.mId = id
-        this.mName = name
-        this.mLocation = null
-        this.mStartTime = startTime
-        this.mEndTime = endTime
+        this.eventId = id
+        this.eventName = name
+        this.eventLocation = null
+        this.eventStartTime = startTime
+        this.eventEndTime = endTime
     }
 
     private var mAllDay = false
+
     constructor(
         id: Long,
         name: String?,
@@ -112,14 +95,13 @@ class WeekViewEvent {
         endTime: Calendar,
         allDay: Boolean
     ) {
-        this.mId = id
-        this.mName = name
-        this.mLocation = location
-        this.mStartTime = startTime
-        this.mEndTime = endTime
+        this.eventId = id
+        this.eventName = name
+        this.eventLocation = location
+        this.eventStartTime = startTime
+        this.eventEndTime = endTime
         this.mAllDay = allDay
     }
-
 
 
     override fun equals(o: Any?): Boolean {
@@ -127,7 +109,7 @@ class WeekViewEvent {
         if (o == null || javaClass != o.javaClass) return false
         val that =
             o as WeekViewEvent
-        return mId == that.mId
+        return eventId == that.eventId
     }
 
     fun splitWeekViewEvents(): List<WeekViewEvent>? {
@@ -135,28 +117,28 @@ class WeekViewEvent {
         val events: MutableList<WeekViewEvent> =
             ArrayList()
         // The first millisecond of the next day is still the same day. (no need to split events for this).
-        var endTime = this.mEndTime?.clone() as Calendar
+        var endTime = this.eventEndTime.clone() as Calendar
         endTime.add(Calendar.MILLISECOND, -1)
-        if (!WeekViewUtils.isSameDay(this.mStartTime, endTime)) {
-            endTime = this.mStartTime?.clone() as Calendar
+        if (!WeekViewUtils.isSameDay(this.eventStartTime, endTime)) {
+            endTime = this.eventStartTime.clone() as Calendar
             endTime[Calendar.HOUR_OF_DAY] = 23
             endTime[Calendar.MINUTE] = 59
             val event1 =
                 WeekViewEvent(
-                    this.mId,
-                    this.mName,
-                    this.mLocation,
-                    this.mStartTime,
+                    this.eventId,
+                    this.eventName,
+                    this.eventLocation,
+                    this.eventStartTime,
                     endTime,
                     this.mAllDay
                 )
-            event1.mColor = mColor
+            event1.eventColor = eventColor
             events.add(event1)
 
             // Add other days.
-            val otherDay = this.mStartTime?.clone() as Calendar
+            val otherDay = this.eventStartTime.clone() as Calendar
             otherDay.add(Calendar.DATE, 1)
-            while (!WeekViewUtils.isSameDay(otherDay, this.mEndTime)) {
+            while (!WeekViewUtils.isSameDay(otherDay, this.eventEndTime)) {
                 val overDay = otherDay.clone() as Calendar
                 overDay[Calendar.HOUR_OF_DAY] = 0
                 overDay[Calendar.MINUTE] = 0
@@ -165,14 +147,14 @@ class WeekViewEvent {
                 endOfOverDay[Calendar.MINUTE] = 59
                 val eventMore =
                     WeekViewEvent(
-                        this.mId,
-                        this.mName,
+                        this.eventId,
+                        this.eventName,
                         null,
                         overDay,
                         endOfOverDay,
                         this.mAllDay
                     )
-                eventMore.mColor = mColor
+                eventMore.eventColor = eventColor
                 events.add(eventMore)
 
                 // Add next day.
@@ -180,19 +162,19 @@ class WeekViewEvent {
             }
 
             // Add last day.
-            val startTime = this.mEndTime?.clone() as Calendar
+            val startTime = this.eventEndTime.clone() as Calendar
             startTime[Calendar.HOUR_OF_DAY] = 0
             startTime[Calendar.MINUTE] = 0
             val event2 =
                 WeekViewEvent(
-                    this.mId,
-                    this.mName,
-                    this.mLocation,
+                    this.eventId,
+                    this.eventName,
+                    this.eventLocation,
                     startTime,
-                    this.mEndTime,
+                    this.eventEndTime,
                     this.mAllDay
                 )
-            event2.mColor = mColor
+            event2.eventColor = eventColor
             events.add(event2)
         } else {
             events.add(this)
@@ -201,6 +183,6 @@ class WeekViewEvent {
     }
 
     override fun hashCode(): Int {
-        return (mId xor (mId ushr 32)).toInt()
+        return (eventId xor (eventId ushr 32)).toInt()
     }
 }
